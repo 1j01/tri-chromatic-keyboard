@@ -76,10 +76,10 @@ class Sound
 		osc.connect(@distortion) for osc, i in @oscs
 		@distortion.connect(@gain)
 		@gain.connect(reverb.input)
-
+	
 	play: ->
 		@gain.gain.value = 1
-
+	
 	stop: ->
 		@gain.gain.value = 0
 
