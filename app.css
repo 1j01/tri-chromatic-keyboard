@@ -24,9 +24,12 @@ body {
 	position: relative;
 	height: calc(100% - 1.5em);
 	overflow-x: auto;
+	overflow-y: hidden;
 }
 #keyboard label {
 	line-height: 1.5em;
+	margin-left: 2px; /* = .key { margin-left } */
+	margin-right: 2px; /* = .key { margin-right } */
 }
 #keyboard label:last-of-type {
 	float: right;
@@ -40,7 +43,7 @@ body {
 	align-items: center;
 	justify-content: center;
 	width: 3em;
-	height: calc(50% - 2px - 5px - 2px - 5px);
+	height: calc(50% - 2px - 5px);
 	margin: 2px;
 	margin-bottom: 5px;
 	text-align: center;
