@@ -1,5 +1,6 @@
 <!doctype html>
 <title>Tri-chromatic Keyboard</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="app.css">
 <div id="keyboard">
 	<label>Scale:
@@ -35,10 +36,11 @@
 		<option value="A#">A♯</option>
 		<option value="B">B</option>
 	</select></label>
-	<label><input id="disable-notes-outside-scale" type="checkbox"> Disable notes outside selected scale</label>
+	<label><input id="disable-notes-outside-scale" type="checkbox">Disable keys outside scale</label>
 	<div id="keys" tabIndex=0></div>
 </div>
 <script src="lib/teoria.js"></script>
 <script src="lib/simple-reverb.js"></script>
+<script src="lib/pep.js"></script>
 <script src="lib/coffee-script.js"></script>
 <script src="app.coffee" type="text/coffeescript"></script>

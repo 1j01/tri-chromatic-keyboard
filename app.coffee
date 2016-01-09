@@ -97,12 +97,8 @@ class Key
 		@size()
 		setTimeout => @size() # in case of scrollbars
 		window.addEventListener "resize", (e)=> @size()
-		window.addEventListener "mouseup", (e)=> @stop()
-		@element.addEventListener "mousedown", (e)=>
-			return if e.button isnt 0
-			@play()
-			e.preventDefault()
-			keys_container.focus()
+		@element.key = @
+		@pressedness = 0
 	
 	size: ->
 		style = getComputedStyle @element
@@ -121,6 +117,16 @@ class Key
 	stop: ->
 		@sound.stop()
 		@element.classList.remove 'playing'
+	
+	press: ->
+		@pressedness++
+		@play() unless @element.classList.contains 'playing'
+	
+	release: ->
+		if --@pressedness <= 0
+			@pressedness = 0
+			@stop()
+
 
 repeating = scale.simple()
 notes =
@@ -131,20 +137,55 @@ firstMIDI = notes[0].midi()
 keys = (new Key(note, firstMIDI) for note in notes)
 
 
+pressed_keyboard_keys = {}
 
-play_note = (e)->
+window.addEventListener 'keydown', (e)->
 	return if e.defaultPrevented or e.ctrlKey or e.altKey or e.metaKey
 	if keys[keycodes.indexOf(e.keyCode)]
 		e.preventDefault()
-		keys[keycodes.indexOf(e.keyCode)].play()
+		return if pressed_keyboard_keys[e.keyCode]
+		pressed_keyboard_keys[e.keyCode] = on
+		keys[keycodes.indexOf(e.keyCode)].press()
 
-stop_note = (e)->
-	keys[keycodes.indexOf(e.keyCode)]?.stop()
+window.addEventListener 'keyup', (e)->
+	delete pressed_keyboard_keys[e.keyCode]
+	keys[keycodes.indexOf(e.keyCode)]?.release()
+
 
 scale_select.addEventListener "change", update_highlight
 scale_start_select.addEventListener "change", update_highlight
 
 
-window.addEventListener 'keydown', play_note
-window.addEventListener 'keyup', stop_note
+pointers = {}
+
+keys_container.setAttribute "touch-action", "none"
+
+window.addEventListener "pointerup", (e)->
+	if pointers[e.pointerId]
+		e.target.key?.release()
+		delete pointers[e.pointerId]
+
+window.addEventListener "pointercancel", (e)->
+	if pointers[e.pointerId]
+		e.target.key?.release()
+		delete pointers[e.pointerId]
+
+window.addEventListener "blur", (e)->
+	for key in keys
+		key.release()
+	for pointerId, _ of pointers
+		delete pointers[pointerId]
+
+keys_container.addEventListener "pointerdown", (e)->
+	if e.button is 0
+		pointers[e.pointerId] = on
+		e.target.key?.press()
+
+keys_container.addEventListener "pointerover", (e)->
+	if pointers[e.pointerId]
+		e.target.key?.press()
+
+keys_container.addEventListener "pointerout", (e)->
+	if pointers[e.pointerId]
+		e.target.key?.release()
 
