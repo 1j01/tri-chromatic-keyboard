@@ -1,0 +1,44 @@
+<!doctype html>
+<title>Tri-chromatic Keyboard</title>
+<link rel="stylesheet" href="app.css">
+<div id="keyboard">
+	<label>Scale:
+		<select id="scale">
+			<option value="harmonicchromatic" selected>Harmonic Chromatic</option>
+			<option value="major">Ionian (Major)</option>
+			<option value="minor">Aeolian (Minor)</option>
+			<option value="dorian">Dorian</option>
+			<option value="phrygian">Phrygian</option>
+			<option value="lydian">Lydian</option>
+			<option value="mixolydian">Mixolydian</option>
+			<option value="locrian">Locrian</option>
+			<option value="majorpentatonic">Major Pentatonic</option>
+			<option value="minorpentatonic">Minor Pentatonic</option>
+			<option value="blues">Blues</option>
+			<option value="doubleharmonic">Double Harmonic (Flamenco)</option>
+			<option value="harmonicminor">Harmonic Minor</option>
+			<option value="melodicminor">Melodic Minor</option>
+			<option value="wholetone">Whole Tone</option>
+		</select>
+	</label>
+	<label>on <select id="scale-start">
+		<option value="C" selected>C</option>
+		<option value="C#">C♯</option>
+		<option value="D">D</option>
+		<option value="D#">D♯</option>
+		<option value="E">E</option>
+		<option value="F">F</option>
+		<option value="F#">F♯</option>
+		<option value="G">G</option>
+		<option value="G#">G♯</option>
+		<option value="A">A</option>
+		<option value="A#">A♯</option>
+		<option value="B">B</option>
+	</select></label>
+	<label><input id="disable-notes-outside-scale" type="checkbox"> Disable notes outside selected scale</label>
+	<div id="keys" tabIndex=0></div>
+</div>
+<script src="lib/teoria.js"></script>
+<script src="lib/simple-reverb.js"></script>
+<script src="lib/coffee-script.js"></script>
+<script src="app.coffee" type="text/coffeescript"></script>
