@@ -16,13 +16,13 @@ reverb.connect audio_ctx.destination
 
 scale_select = document.getElementById("scale")
 scale_start_select = document.getElementById("scale-start")
-disable_notes_outside_scale_checkbox = document.getElementById("disable-notes-outside-scale")
+disable_keys_outside_scale_checkbox = document.getElementById("disable-keys-outside-scale")
 keys_container = document.getElementById("keys")
 keyboard_element = document.getElementById("keyboard")
 
-disable_notes_outside_scale = disable_notes_outside_scale_checkbox.checked
-disable_notes_outside_scale_checkbox.onchange = (e)->
-	disable_notes_outside_scale = e.target.checked
+disable_keys_outside_scale = disable_keys_outside_scale_checkbox.checked
+disable_keys_outside_scale_checkbox.onchange = (e)->
+	disable_keys_outside_scale = e.target.checked
 	update_highlight()
 
 in_scale = (note)->
@@ -35,7 +35,7 @@ in_scale = (note)->
 update_highlight = (e)->
 	for key in keys
 		matches = in_scale(key.note)
-		disable = disable_notes_outside_scale and not matches
+		disable = disable_keys_outside_scale and not matches
 		key.element.classList[if disable then "add" else "remove"] "disabled"
 		key.element.classList[if matches then "remove" else "add"] "lowlight"
 		key.element.classList[if matches then "add" else "remove"] "highlight"
@@ -110,7 +110,7 @@ class Key
 			keyboard_element.style.width = "#{parseInt(marginLeft) + parseInt(@element.style.left) + width + parseInt(marginRight)}px"
 	
 	play: ->
-		return if disable_notes_outside_scale and not in_scale(@note)
+		return if disable_keys_outside_scale and not in_scale(@note)
 		@sound.play()
 		@element.classList.add 'playing'
 	
