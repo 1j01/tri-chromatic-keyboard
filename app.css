@@ -119,6 +119,8 @@ body {
 }
 .key.disabled {
 	opacity: 0.3;
+}
+.key.disabled::after {
 	color: transparent;
 }
 .key.disabled::before {
