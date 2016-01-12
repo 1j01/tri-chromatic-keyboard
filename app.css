@@ -125,8 +125,20 @@ body {
 	box-shadow: inset 0 0 transparent;
 }
 
-@media (max-width: 75em) and (max-height: 55em) {
+@media (max-width: 75em) and (max-height: 55em), print {
 	#fork-me-on-github {
 		display: none;
+	}
+}
+
+@media print {
+	#keyboard label:last-of-type {
+		display: none;
+	}
+	html,
+	body,
+	#keyboard {
+		background: initial;
+		color: initial;
 	}
 }
