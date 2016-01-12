@@ -87,10 +87,12 @@ class Key
 	constructor: (@note, firstMIDI)->
 		@sound = new Sound @note.fq(), 'triangle'
 		@element = document.createElement 'div'
-		@element.innerText = @note.toString(true)
-			.replace(/^[a-g]/, ((m)-> m.toUpperCase()))
-			.replace("#", "♯")
-			.replace("b", "♭")
+		@element.dataset.note =
+		@element.innerText =
+			@note.toString(true)
+				.replace(/^[a-g]/, ((m)-> m.toUpperCase()))
+				.replace("#", "♯")
+				.replace("b", "♭")
 		keys_container.appendChild @element
 		@element.className = "key chroma-#{"abc"[@note.midi() % 3]}"
 		@element.style.position = "absolute"
