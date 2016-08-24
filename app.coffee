@@ -40,52 +40,77 @@ update_highlight = (e)->
 		key.element.classList[if matches then "remove" else "add"] "lowlight"
 		key.element.classList[if matches then "add" else "remove"] "highlight"
 
-class Sound
-	constructor: (frequency, type)->
-		harmonix = 0
+# class Sound
+# 	constructor: (frequency, type)->
+# 		harmonix = 0
 		
-		@osc = audio_ctx.createOscillator() # Create oscillator node
-		@oscs = (audio_ctx.createOscillator() for [0..harmonix])
+# 		@osc = audio_ctx.createOscillator() # Create oscillator node
+# 		@oscs = (audio_ctx.createOscillator() for [0..harmonix])
 		
-		@osc.frequency.value = frequency
-		osc.frequency.value = frequency * (i + 1) + (((i*0))) for osc, i in @oscs
+# 		@osc.frequency.value = frequency
+# 		osc.frequency.value = frequency * (i + 1) + (((i*0))) for osc, i in @oscs
 		
-		@osc.type = type ? 'saw'
+# 		@osc.type = type ? 'saw'
 		
-		@osc.start(0)
-		osc.start(0) for osc, i in @oscs
+# 		@osc.start(0)
+# 		osc.start(0) for osc, i in @oscs
 		
-		@gain = audio_ctx.createGain()
-		@gain.gain.value = 0
+# 		@gain = audio_ctx.createGain()
+# 		@gain.gain.value = 0
 		
-		# Waveshaping
-		make_distortion_curve = (k=50)->
-			n_samples = 44100
-			curve = new Float32Array(n_samples)
-			deg = Math.PI / 180
-			for i in [0..n_samples]
-				x = i * 2 / n_samples - 1
-				curve[i] = ( 3 + k ) * x * 20 * deg / ( Math.PI + k * Math.abs(x) )
-			curve
+# 		# Waveshaping
+# 		make_distortion_curve = (k=50)->
+# 			n_samples = 44100
+# 			curve = new Float32Array(n_samples)
+# 			deg = Math.PI / 180
+# 			for i in [0..n_samples]
+# 				x = i * 2 / n_samples - 1
+# 				curve[i] = ( 3 + k ) * x * 20 * deg / ( Math.PI + k * Math.abs(x) )
+# 			curve
 		
-		@distortion = audio_ctx.createWaveShaper()
-		@distortion.curve = make_distortion_curve(10)
-		@distortion.oversample = '4x'
+# 		@distortion = audio_ctx.createWaveShaper()
+# 		@distortion.curve = make_distortion_curve(10)
+# 		@distortion.oversample = '4x'
 		
-		@osc.connect(@distortion)
-		osc.connect(@distortion) for osc, i in @oscs
-		@distortion.connect(@gain)
-		@gain.connect(reverb.input)
+# 		# @osc.connect(@distortion)
+# 		# osc.connect(@distortion) for osc, i in @oscs
+# 		# @distortion.connect(@gain)
+# 		@osc.connect(@gain)
+# 		@gain.connect(reverb.input)
 	
-	play: ->
-		@gain.gain.value = 1
+# 	play: ->
+# 		@gain.gain.value = 1
 	
-	stop: ->
-		@gain.gain.value = 0
+# 	stop: ->
+# 		@gain.gain.value = 0
+
+# console.log "a"
+MIDI.loadPlugin
+	# api: "audiotag"
+	api: "webaudio"
+	# soundfontUrl: "https://gleitz.github.io/midi-js-soundfonts/FluidR3_GM/" #"./soundfont/"
+	soundfontUrl: "./lib/soundfont/"
+	instrument: "acoustic_grand_piano"
+	# instrument: "marimba"
+	onprogress: (state, progress)->
+		console.log(state, progress)
+	onerror: (err)->
+		console.error(err)
+	onsuccess: ->
+		# console.log "c"
+		# delay = 0 # play one note every quarter second
+		# note = 50 # the MIDI note
+		# velocity = 127 # how hard the note hits
+		# MIDI.setVolume(0, 127)
+		# MIDI.noteOn(0, note, velocity, delay)
+		# MIDI.noteOff(0, note, delay + 0.75)
+
+# console.log "b"
 
 class Key
 	constructor: (@note, firstMIDI)->
-		@sound = new Sound @note.fq(), 'triangle'
+		# @sound = new Sound @note.fq(), 'triangle'
+		
 		@element = document.createElement 'div'
 		@element.dataset.note =
 		@element.innerText =
@@ -113,11 +138,16 @@ class Key
 	
 	play: ->
 		return if disable_keys_outside_scale and not in_scale(@note)
-		@sound.play()
+		# @sound.play()
+		delay = 0 # play one note every quarter second
+		velocity = 127 # how hard the note hits
+		MIDI.setVolume(0, 127)
+		MIDI.noteOn(0, @note.midi(), velocity, delay)
 		@element.classList.add 'playing'
 	
 	stop: ->
-		@sound.stop()
+		MIDI.noteOff(0, @note.midi(), 0)
+		# @sound.stop()
 		@element.classList.remove 'playing'
 	
 	press: ->
