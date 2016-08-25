@@ -40,19 +40,20 @@ update_highlight = (e)->
 		key.element.classList[if matches then "remove" else "add"] "lowlight"
 		key.element.classList[if matches then "add" else "remove"] "highlight"
 
+instrument = "marimba" # "acoustic_grand_piano"
 MIDI.loadPlugin
 	# api: "audiotag"
 	api: "webaudio"
-	# soundfontUrl: "https://gleitz.github.io/midi-js-soundfonts/FluidR3_GM/" #"./soundfont/"
+	# soundfontUrl: "https://gleitz.github.io/midi-js-soundfonts/FluidR3_GM/"
 	soundfontUrl: "./lib/soundfont/"
-	instrument: "acoustic_grand_piano"
-	# instrument: "marimba"
+	instrument: instrument
 	onprogress: (state, progress)->
 		console?.log(state, progress)
 	onerror: (err)->
 		console?.error(err)
 	onsuccess: ->
 		console?.log "MIDI.js loaded"
+		MIDI.programChange(0, MIDI.GM.byName[instrument].number);
 
 class Key
 	constructor: (@note, firstMIDI)->
@@ -166,6 +167,4 @@ keys_container.addEventListener "pointerover", (e)->
 keys_container.addEventListener "pointerout", (e)->
 	if pointers[e.pointerId]
 		pointers[e.pointerId].key?.release()
-		pointers[e.pointerId].key = null 
-		# e.target.key?.release()
-
+		pointers[e.pointerId].key = null
