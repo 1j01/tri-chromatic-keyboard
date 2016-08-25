@@ -40,12 +40,10 @@ update_highlight = (e)->
 		key.element.classList[if matches then "remove" else "add"] "lowlight"
 		key.element.classList[if matches then "add" else "remove"] "highlight"
 
-instrument = "marimba" # "acoustic_grand_piano"
+instrument = "marimba" # "vibraphone" # "acoustic_grand_piano"
 MIDI.loadPlugin
-	# api: "audiotag"
 	api: "webaudio"
-	# soundfontUrl: "https://gleitz.github.io/midi-js-soundfonts/FluidR3_GM/"
-	soundfontUrl: "./lib/soundfont/"
+	soundfontUrl: "./lib/soundfont/" # "https://gleitz.github.io/midi-js-soundfonts/FluidR3_GM/"
 	instrument: instrument
 	onprogress: (state, progress)->
 		console?.log(state, progress)
@@ -53,7 +51,7 @@ MIDI.loadPlugin
 		console?.error(err)
 	onsuccess: ->
 		console?.log "MIDI.js loaded"
-		MIDI.programChange(0, MIDI.GM.byName[instrument].number);
+		MIDI.programChange(0, MIDI.GM.byName[instrument].number)
 
 class Key
 	constructor: (@note, firstMIDI)->
@@ -150,6 +148,10 @@ window.addEventListener "blur", (e)->
 	for pointerId, _ of pointers
 		pointers[pointerId].key?.release()
 		delete pointers[pointerId]
+
+keys_container.addEventListener "contextmenu", (e)->
+	# easily accidentally triggered trying to use multitouch
+	e.preventDefault()
 
 keys_container.addEventListener "pointerdown", (e)->
 	if e.button is 0
