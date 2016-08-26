@@ -10,7 +10,8 @@ The application supports mouse, pen, touch, and keyboard inputs.
 which is possibly ironic for a project
 focused on reinventing the keyboard.)
 
-**TODO:** Improve the sound of the synth!
+Uses [MIDI.js][] for audio output.
 
 [Tri-Chromatic Keyboard Layout]: http://musicnotation.org/wiki/instruments/tri-chromatic-keyboard-layout/
 [app]: http://1j01.github.io/tri-chromatic-keyboard/
+[MIDI.js]: https://github.com/mudcube/MIDI.js
