@@ -4,8 +4,6 @@ audio_ctx = new AudioContext
 scale_start = "C"
 scale = teoria.scale scale_start, "harmonicchromatic"
 
-keycodes = [81,65,87,83,69,68,82,70,84,71,89,72,85,74,73,75,79,76,80,186,219,222,221,13,220]
-
 reverb = new SimpleReverb audio_ctx,
 	seconds: 1
 	decay: 8
@@ -111,10 +109,62 @@ firstMIDI = notes[0].midi()
 keys = (new Key(note, firstMIDI) for note in notes)
 
 
+
+# keycodes = [81,65,87,83,69,68,82,70,84,71,89,72,85,74,73,75,79,76,80,186,219,222,221,13,220]
+
+# blank_layout =
+# 	name: 'blank'
+# 	layout: [
+# 		['','','','','','','','','','','','','']
+# 		['','','','','','','','','','','','','']
+# 		['','','','','','','','','','','']
+# 		['','','','','','','','','','']
+# 	]
+# 	offsets: [0, 1.5, 1.75, 2.25]
+
+
+# ll = new Layoutline(layouts, 200)
+# current_layout = blank_layout
+
+interleave_arrays = (arrays)->
+	result = []
+	max_length = 0
+	for array in arrays
+		max_length = Math.max(max_length, array.length)
+	for i in [0..max_length]
+		for array in arrays
+			if i < array.length
+				result.push(array[i])
+	result
+	# result = []
+	# i = 0
+	# loop
+	# 	ended = no
+	# 	for row in keycode_rows
+	# 		if i >= row.length
+	# 			ended = yes
+	# 		else
+	# 			result.push(row[i])
+	# 	break if ended
+	# 	i += 1
+	# result
+
+keycode_rows = [
+	[192,49,50,51,52,53,54,55,56,57,48,189,187,8]
+	[9,81,87,69,82,84,89,85,73,79,80,219,221,220]
+	# [65,83,68,70,71,72,74,75,76,186,222,13]
+	# [90,88,67,86,66,78,77,188,190,191,16]
+]
+recording_row_index = keycode_rows.length
+keycodes = interleave_arrays(keycode_rows)
+
 pressed_keyboard_keys = {}
 
 window.addEventListener 'keydown', (e)->
 	return if e.defaultPrevented or e.ctrlKey or e.altKey or e.metaKey
+	# keycode_rows[recording_row_index] ?= []
+	# keycode_rows[recording_row_index].push(e.keyCode)
+	# console.log JSON.stringify(keycode_rows)
 	if keys[keycodes.indexOf(e.keyCode)]
 		e.preventDefault()
 		return if pressed_keyboard_keys[e.keyCode]
@@ -158,7 +208,7 @@ keys_container.addEventListener "contextmenu", (e)->
 	e.preventDefault()
 
 keys_container.addEventListener "mousedown", (e)->
-	# prevent selection starting (preventing selectstart doesn't work)
+	# prevent selection starting (preventing selectstart here doesn't work)
 	e.preventDefault()
 
 keys_container.addEventListener "pointerdown", (e)->
