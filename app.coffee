@@ -145,6 +145,10 @@ window.addEventListener "pointercancel", (e)->
 		delete pointers[e.pointerId]
 
 window.addEventListener "blur", (e)->
+	for keyCodeKey, keyIsDown of pressed_keyboard_keys
+		keyCode = parseInt(keyCodeKey)
+		keys[keycodes.indexOf(keyCode)]?.release()
+	pressed_keyboard_keys = {}
 	for pointerId, _ of pointers
 		pointers[pointerId].key?.release()
 		delete pointers[pointerId]
