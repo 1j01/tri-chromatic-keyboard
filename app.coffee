@@ -157,6 +157,10 @@ keys_container.addEventListener "contextmenu", (e)->
 	# easily accidentally triggered trying to use multitouch
 	e.preventDefault()
 
+keys_container.addEventListener "mousedown", (e)->
+	# prevent selection starting (preventing selectstart doesn't work)
+	e.preventDefault()
+
 keys_container.addEventListener "pointerdown", (e)->
 	if e.button is 0
 		pointers[e.pointerId]?.key?.release()
